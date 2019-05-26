@@ -16,55 +16,12 @@ namespace ALVR
     {
         private static readonly string APP_FILEMAPPING_NAME = "ALVR_DRIVER_FILEMAPPING_0B124897-7730-4B84-AA32-088E9B92851F";
 
-        public class EyeFov
-        {
-            public readonly double[] eyeFov;
-            public EyeFov(double[] eyeFov)
-            {
-                this.eyeFov = eyeFov;
-            }
-        }
-        public static readonly EyeFov EYE_FOV_GEARVR = new EyeFov(new double[] { 45, 45, 45, 45, 45, 45, 45, 45 });
-        public static readonly EyeFov EYE_FOV_DAYDREAMVIEW = new EyeFov(new double[] { 53, 45, 53, 44, 45, 53, 53, 44 });
-        public static readonly EyeFov EYE_FOV_MIRAGESOLO = new EyeFov(new double[] { 46, 45, 46, 46, 45, 46, 46, 46 });
-        public class Resolution
-        {
-            public int width { get; set; }
-            public int height { get; set; }
-            public string display;
-            public EyeFov eyeFov;
-            public override string ToString()
-            {
-                return display;
-            }
-            public Resolution(int width, int height, EyeFov eyeFov)
-            {
-                this.width = width;
-                this.height = height;
-                display = width + " x " + height;
-                this.eyeFov = eyeFov;
-            }
-            public Resolution(int width, int height, string label, EyeFov eyeFov)
-            {
-                this.width = width;
-                this.height = height;
-                display = width + " x " + height + " " + label + "";
-                this.eyeFov = eyeFov;
-            }
-        }
-        public static readonly Resolution[] supportedResolutions = {
-            new Resolution(1024, 512, EYE_FOV_GEARVR)
-            , new Resolution(1536, 768, EYE_FOV_GEARVR)
-            , new Resolution(2048, 1024, EYE_FOV_GEARVR)
-            , new Resolution(2560, 1280, EYE_FOV_GEARVR)
-            , new Resolution(2880, 1440, EYE_FOV_GEARVR)
-            , new Resolution(3072, 1536, EYE_FOV_GEARVR)
-            , new Resolution(2432, 1344, "Quest", EYE_FOV_GEARVR)
-            , new Resolution(2260, 1150, "Mirage Solo(Mid)", EYE_FOV_MIRAGESOLO)
-            , new Resolution(3390, 1726, "Mirage Solo(Max)", EYE_FOV_MIRAGESOLO)
-            , new Resolution(2565, 1256, "DaydreamView(Mid)", EYE_FOV_DAYDREAMVIEW)
-            , new Resolution(3848, 1884, "DaydreamView(Max)", EYE_FOV_DAYDREAMVIEW)
-        };
+        public static readonly int DEFAULT_SCALE_INDEX = 3; // 100%
+        public static readonly int[] supportedScales = { 25, 50, 75, 100, 125, 150, 175, 200 };
+
+        public static readonly int DEFAULT_REFRESHRATE = 60;
+        public static readonly int DEFAULT_WIDTH = 2048;
+        public static readonly int DEFAULT_HEIGHT = 1024;
 
         public class ComboBoxCustomItem
         {
@@ -109,6 +66,9 @@ namespace ALVR
         public static readonly string[] supportedRecenterButton = new string[] {
             "None", "Trigger", "Trackpad click", "Trackpad touch", "Back"
         };
+        public static readonly int[] recenterButtonIndex = new int[] {
+            -1, 24, 28, 29, 21
+        };
 
         public static readonly ComboBoxCustomItem[] supportedCodecs = {
             new ComboBoxCustomItem("H.264 AVC", 0),
@@ -148,10 +108,11 @@ namespace ALVR
             return suppressFrameDrop ? 5 : 1;
         }
 
-        public bool Save()
+        public bool Save(DeviceDescriptor device)
         {
             try
             {
+                var c = Properties.Settings.Default;
                 dynamic driverConfig = new DynamicJson();
                 driverConfig.serialNumber = "ALVR-001";
                 driverConfig.modelNumber = "ALVR driver server";
@@ -165,52 +126,90 @@ namespace ALVR
                 driverConfig.controlListenPort = 9944;
                 driverConfig.controlListenHost = "127.0.0.1";
                 driverConfig.useKeyedMutex = true;
-                driverConfig.controllerTrackingSystemName = "ALVR Remote Controller";
-                driverConfig.controllerManufacturerName = "ALVR";
-                driverConfig.controllerModelNumber = "ALVR Remote Controller";
-                driverConfig.controllerRenderModelName = "vr_controller_vive_1_5";
-                driverConfig.controllerSerialNumber = "ALVR Remote Controller";
 
-                driverConfig.codec = Properties.Settings.Default.codec; // 0: H264, 1: H265
-                driverConfig.encodeBitrateInMBits = Properties.Settings.Default.bitrate;
+                driverConfig.codec = c.codec; // 0: H264, 1: H265
+                driverConfig.encodeBitrateInMBits = c.bitrate;
 
-                driverConfig.refreshRate = 60;
-                driverConfig.renderWidth = Properties.Settings.Default.renderWidth;
-                driverConfig.renderHeight = Properties.Settings.Default.renderHeight;
+                if (device == null)
+                {
+                    driverConfig.refreshRate = DEFAULT_REFRESHRATE;
+                    driverConfig.renderWidth = DEFAULT_WIDTH;
+                    driverConfig.renderHeight = DEFAULT_HEIGHT;
 
-                driverConfig.eyeFov = Properties.Settings.Default.eyeFov;
+                    driverConfig.autoConnectHost = "";
+                    driverConfig.autoConnectPort = 0;
 
-                driverConfig.enableSound = Properties.Settings.Default.enableSound && Properties.Settings.Default.soundDevice != "";
-                driverConfig.soundDevice = Properties.Settings.Default.soundDevice;
+                    driverConfig.eyeFov = new double[] { 45, 45, 45, 45, 45, 45, 45, 45 };
+                }
+                else
+                {
+                    driverConfig.refreshRate = device.RefreshRates[0] == 0 ? DEFAULT_REFRESHRATE : device.RefreshRates[0];
+                    driverConfig.renderWidth = device.DefaultWidth * supportedScales[c.resolutionScale] / 100;
+                    driverConfig.renderHeight = device.DefaultHeight * supportedScales[c.resolutionScale] / 100;
+
+                    driverConfig.autoConnectHost = device.ClientHost;
+                    driverConfig.autoConnectPort = device.ClientPort;
+
+                    driverConfig.eyeFov = device.EyeFov;
+                }
+
+
+                driverConfig.enableSound = c.enableSound && c.soundDevice != "";
+                driverConfig.soundDevice = c.soundDevice;
 
                 driverConfig.debugOutputDir = Utils.GetOutputPath();
-                driverConfig.debugLog = Properties.Settings.Default.debugLog;
+                driverConfig.debugLog = c.debugLog;
                 driverConfig.debugFrameIndex = false;
                 driverConfig.debugFrameOutput = false;
-                driverConfig.debugCaptureOutput = Properties.Settings.Default.debugCaptureOutput;
+                driverConfig.debugCaptureOutput = c.debugCaptureOutput;
                 driverConfig.useKeyedMutex = true;
 
                 driverConfig.clientRecvBufferSize = GetBufferSizeKB() * 1000;
-                driverConfig.frameQueueSize = GetFrameQueueSize(Properties.Settings.Default.suppressFrameDrop);
+                driverConfig.frameQueueSize = GetFrameQueueSize(c.suppressFrameDrop);
 
-                driverConfig.force60HZ = Properties.Settings.Default.force60Hz;
+                driverConfig.force60HZ = c.force60Hz;
 
-                driverConfig.enableController = Properties.Settings.Default.enableController;
-                driverConfig.controllerTriggerMode = Properties.Settings.Default.controllerTriggerMode;
-                driverConfig.controllerTrackpadClickMode = Properties.Settings.Default.controllerTrackpadClickMode;
-                driverConfig.controllerTrackpadTouchMode = Properties.Settings.Default.controllerTrackpadTouchMode;
-                driverConfig.controllerBackMode = Properties.Settings.Default.controllerBackMode;
+                driverConfig.enableController = c.enableController;
+                if(device != null && device.HasTouchController)
+                {
+                    driverConfig.controllerTrackingSystemName = "ALVR Remote Controller";
+                    driverConfig.controllerManufacturerName = "ALVR";
+                    driverConfig.controllerModelNumber = "ALVR Remote Controller";
+                    // There is not render model for Oculus Touch.
+                    driverConfig.controllerRenderModelNameLeft = "oculus_cv1_controller_left";
+                    driverConfig.controllerRenderModelNameRight = "oculus_cv1_controller_right";
+                    driverConfig.controllerSerialNumber = "ALVR Remote Controller";
+                    driverConfig.controllerType = "oculus_touch";
+                    driverConfig.controllerLegacyInputProfile = "oculus_touch";
+                    driverConfig.controllerInputProfilePath = "{alvr_server}/input/touch_profile.json";
+                }
+                else
+                {
+                    driverConfig.controllerTrackingSystemName = "ALVR Remote Controller";
+                    driverConfig.controllerManufacturerName = "ALVR";
+                    driverConfig.controllerModelNumber = "ALVR Remote Controller";
+                    driverConfig.controllerRenderModelNameLeft = "vr_controller_vive_1_5";
+                    driverConfig.controllerRenderModelNameRight = "vr_controller_vive_1_5";
+                    driverConfig.controllerSerialNumber = "ALVR Remote Controller";
+                    driverConfig.controllerType = "vive_controller";
+                    driverConfig.controllerLegacyInputProfile = "vive_controller";
+                    driverConfig.controllerInputProfilePath = "{alvr_server}/input/vive_controller_profile.json";
+                }
+                driverConfig.controllerTriggerMode = c.controllerTriggerMode;
+                driverConfig.controllerTrackpadClickMode = c.controllerTrackpadClickMode;
+                driverConfig.controllerTrackpadTouchMode = c.controllerTrackpadTouchMode;
+                driverConfig.controllerBackMode = c.controllerBackMode;
 
-                // 0=Disabled, 1=Trigger, 2=Trackpad Click, 3=Trackpad Touch, 4=Back
-                driverConfig.controllerRecenterButton = Properties.Settings.Default.controllerRecenterButton;
-                driverConfig.useTrackingReference = Properties.Settings.Default.useTrackingReference;
+                // -1=Disabled, other=ALVR Input id
+                driverConfig.controllerRecenterButton = recenterButtonIndex[c.controllerRecenterButton];
+                driverConfig.useTrackingReference = c.useTrackingReference;
 
-                driverConfig.enableOffsetPos = Properties.Settings.Default.useOffsetPos;
-                driverConfig.offsetPosX = Utils.ParseFloat(Properties.Settings.Default.offsetPosX);
-                driverConfig.offsetPosY = Utils.ParseFloat(Properties.Settings.Default.offsetPosY);
-                driverConfig.offsetPosZ = Utils.ParseFloat(Properties.Settings.Default.offsetPosZ);
+                driverConfig.enableOffsetPos = c.useOffsetPos;
+                driverConfig.offsetPosX = Utils.ParseFloat(c.offsetPosX);
+                driverConfig.offsetPosY = Utils.ParseFloat(c.offsetPosY);
+                driverConfig.offsetPosZ = Utils.ParseFloat(c.offsetPosZ);
 
-                driverConfig.trackingFrameOffset = Utils.ParseInt(Properties.Settings.Default.trackingFrameOffset);
+                driverConfig.trackingFrameOffset = Utils.ParseInt(c.trackingFrameOffset);
 
                 byte[] bytes = Encoding.UTF8.GetBytes(driverConfig.ToString());
                 memoryMappedFile = MemoryMappedFile.CreateOrOpen(APP_FILEMAPPING_NAME, sizeof(int) + bytes.Length);
@@ -222,7 +221,7 @@ namespace ALVR
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Error on creating filemapping.\r\nPlease check the status of vrserver.exe and retry.");
                 return false;

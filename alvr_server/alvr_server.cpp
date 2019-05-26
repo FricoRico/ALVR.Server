@@ -10,7 +10,6 @@
 #include "systemtime.h"
 #include "d3drender.h"
 
-#include <winsock2.h>
 #include <d3d11.h>
 #include <wrl.h>
 #include <map>
@@ -154,8 +153,8 @@ namespace
 			m_encodeFinished.Wait();
 		}
 
-		void OnClientConnected() {
-			m_scheduler.OnClientConnected();
+		void OnStreamStart() {
+			m_scheduler.OnStreamStart();
 		}
 
 		void OnPacketLoss() {
@@ -186,36 +185,38 @@ namespace
 class VSyncThread : public CThread
 {
 public:
-	VSyncThread() 
-		: m_bExit(false) {}
+	VSyncThread(int refreshRate) 
+		: m_bExit(false)
+		, m_refreshRate(refreshRate) {}
 
 	// Trigger VSync if elapsed time from previous VSync is larger than 30ms.
 	void Run()override {
+		m_PreviousVsync = 0;
+
 		while (!m_bExit) {
 			uint64_t current = GetTimestampUs();
+			uint64_t interval = 1000 * 1000 / m_refreshRate;
 
-			int interval = (1000 / m_refreshRate * 1000);
-			if (current - m_PreviousVsync < interval - 2000) {
-				int sleepTime = (int)((m_PreviousVsync + interval) - current) / 1000;
-				Log(L"Skip VSync Event. Sleep %llu ms", sleepTime);
-				Sleep(sleepTime);
+			if (m_PreviousVsync + interval > current) {
+				uint64_t sleepTimeMs = (m_PreviousVsync + interval - current) / 1000;
+
+				if (sleepTimeMs > 0) {
+					Log(L"Sleep %llu ms for next VSync.", sleepTimeMs);
+					Sleep(static_cast<DWORD>(sleepTimeMs));
+				}
+
+				m_PreviousVsync += interval;
 			}
 			else {
-				Log(L"Generate VSync Event by VSyncThread");
-				vr::VRServerDriverHost()->VsyncEvent(0);
-				m_PreviousVsync = GetTimestampUs();
+				m_PreviousVsync = current;
 			}
+			Log(L"Generate VSync Event by VSyncThread");
+			vr::VRServerDriverHost()->VsyncEvent(0);
 		}
 	}
 
 	void Shutdown() {
 		m_bExit = true;
-	}
-
-	void InsertVsync() {
-		Log(L"Insert VSync Event (Ignore)");
-		//vr::VRServerDriverHost()->VsyncEvent(0);
-		//m_PreviousVsync = GetTimestampUs();
 	}
 
 	void SetRefreshRate(int refreshRate) {
@@ -279,10 +280,10 @@ public:
 	virtual void GetProjectionRaw(vr::EVREye eEye, float *pfLeft, float *pfRight, float *pfTop, float *pfBottom) override
 	{
 		auto eyeFov = Settings::Instance().m_eyeFov[eEye];
-		*pfLeft = -tan(eyeFov.left / 180.0 * M_PI);
-		*pfRight = tan(eyeFov.right / 180.0 * M_PI);
-		*pfTop = -tan(eyeFov.top / 180.0 * M_PI);
-		*pfBottom = tan(eyeFov.bottom / 180.0 * M_PI);
+		*pfLeft = -tanf(static_cast<float>(eyeFov.left / 180.0 * M_PI));
+		*pfRight = tanf(static_cast<float>(eyeFov.right / 180.0 * M_PI));
+		*pfTop = -tanf(static_cast<float>(eyeFov.top / 180.0 * M_PI));
+		*pfBottom = tanf(static_cast<float>(eyeFov.bottom / 180.0 * M_PI));
 
 		Log(L"GetProjectionRaw Eye=%d (l,r,t,b)=(%f,%f,%f,%f)", eEye, eyeFov.left, eyeFov.right, eyeFov.top, eyeFov.bottom);
 	}
@@ -552,6 +553,11 @@ public:
 			//return;
 		}
 
+		if (!m_Listener->IsStreaming()) {
+			Log(L"Discard frame because isStreaming=false. FrameIndex=%llu", m_submitFrameIndex);
+			return;
+		}
+
 		ID3D11Texture2D *pSyncTexture = m_pD3DRender->GetSharedTexture((HANDLE)syncTexture);
 		if (!pSyncTexture)
 		{
@@ -720,7 +726,6 @@ class CRemoteHmd : public vr::ITrackedDeviceServerDriver
 public:
 	CRemoteHmd(std::shared_ptr<Listener> listener)
 		: m_unObjectId(vr::k_unTrackedDeviceIndexInvalid)
-		, m_nVsyncCounter(0)
 		, m_added(false)
 		, m_Listener(listener)
 	{
@@ -732,14 +737,18 @@ public:
 		std::function<void()> launcherCallback = [&]() { Enable(); };
 		std::function<void(std::string, std::string)> commandCallback = [&](std::string commandName, std::string args) { CommandCallback(commandName, args); };
 		std::function<void()> poseCallback = [&]() { OnPoseUpdated(); };
-		std::function<void(int, int, int)> newClientCallback = [&](int refreshRate, int renderWidth, int renderHeight) { OnNewClient(refreshRate, renderWidth, renderHeight); };
+		std::function<void()> newClientCallback = [&]() { OnNewClient(); };
+		std::function<void()> streamStartCallback = [&]() { OnStreamStart(); };
 		std::function<void()> packetLossCallback = [&]() { OnPacketLoss(); };
+		std::function<void()> shutdownCallback = [&]() { OnShutdown(); };
 
 		m_Listener->SetLauncherCallback(launcherCallback);
 		m_Listener->SetCommandCallback(commandCallback);
 		m_Listener->SetPoseUpdatedCallback(poseCallback);
 		m_Listener->SetNewClientCallback(newClientCallback);
+		m_Listener->SetStreamStartCallback(streamStartCallback);
 		m_Listener->SetPacketLossCallback(packetLossCallback);
+		m_Listener->SetShutdownCallback(shutdownCallback);
 
 		Log(L"CRemoteHmd successfully initialized.");
 	}
@@ -874,7 +883,7 @@ public:
 			}
 		}
 
-		m_VSyncThread = std::make_shared<VSyncThread>();
+		m_VSyncThread = std::make_shared<VSyncThread>(Settings::Instance().m_refreshRate);
 		m_VSyncThread->Start();
 
 		m_recenterManager = std::make_shared<RecenterManager>();
@@ -1098,31 +1107,28 @@ public:
 			
 			vr::VRServerDriverHost()->TrackedDevicePoseUpdated(m_unObjectId, GetPose(), sizeof(vr::DriverPose_t));
 
-			Log(L"Generate VSync Event by OnPoseUpdated");
-			m_VSyncThread->InsertVsync();
-
 			if (m_trackingReference) {
 				m_trackingReference->OnPoseUpdated();
 			}
 		}
 	}
 
-	// When renderWidth and renderHeight are 0, use user specified size.
-	void OnNewClient(int refreshRate, int renderWidth, int renderHeight) {
-		// LIMITATION: resolution and bitrate can only be changed when client is connecting.
-		Settings::Instance().m_refreshRate = refreshRate;
+	void OnNewClient() {
+	}
 
-		m_VSyncThread->SetRefreshRate(refreshRate);
-
-		//m_encoder->Reconfigure(refreshRate, renderWidth, renderHeight, Settings::Instance().m_encodeBitrateInMBits);
-
-		vr::VRProperties()->SetFloatProperty(m_ulPropertyContainer, vr::Prop_DisplayFrequency_Float, (float)refreshRate);
+	void OnStreamStart() {
 		// Insert IDR frame for faster startup of decoding.
-		m_encoder->OnClientConnected();
+		m_encoder->OnStreamStart();
 	}
 
 	void OnPacketLoss() {
 		m_encoder->OnPacketLoss();
+	}
+
+	void OnShutdown() {
+		Log(L"Sending shutdown signal to vrserver.");
+		vr::VREvent_Reserved_t data = { 0, 0 };
+		vr::VRServerDriverHost()->VendorSpecificEvent(m_unObjectId, vr::VREvent_DriverRequestedQuit, (vr::VREvent_Data_t&)data, 0);
 	}
 private:
 	bool m_added;
@@ -1130,8 +1136,6 @@ private:
 	vr::PropertyContainerHandle_t m_ulPropertyContainer;
 
 	std::wstring m_adapterName;
-
-	uint32_t m_nVsyncCounter;
 
 	std::shared_ptr<CD3DRender> m_D3DRender;
 	std::shared_ptr<CEncoder> m_encoder;

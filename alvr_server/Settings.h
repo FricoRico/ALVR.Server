@@ -37,6 +37,8 @@ static const char * const k_pch_Settings_ListenHost_String = "listenHost";
 static const char * const k_pch_Settings_ListenPort_Int32 = "listenPort";
 static const char * const k_pch_Settings_ControlListenHost_String = "controlListenHost";
 static const char * const k_pch_Settings_ControlListenPort_Int32 = "controlListenPort";
+static const char * const k_pch_Settings_AutoConnectHost_String = "autoConnectHost";
+static const char * const k_pch_Settings_AutoConnectPort_Int32 = "autoConnectPort";
 
 static const char * const k_pch_Settings_AdapterIndex_Int32 = "adapterIndex";
 
@@ -46,8 +48,13 @@ static const char * const k_pch_Settings_LimitTimeslotPackets_Int32 = "limitTime
 static const char * const k_pch_Settings_ControllerTrackingSystemName_String = "controllerTrackingSystemName";
 static const char * const k_pch_Settings_ControllerManufacturerName_String = "controllerManufacturerName";
 static const char * const k_pch_Settings_ControllerModelNumber_String = "controllerModelNumber";
-static const char * const k_pch_Settings_ControllerRenderModelName_String = "controllerRenderModelName";
+static const char * const k_pch_Settings_ControllerRenderModelNameLeft_String = "controllerRenderModelNameLeft";
+static const char * const k_pch_Settings_ControllerRenderModelNameRight_String = "controllerRenderModelNameRight";
 static const char * const k_pch_Settings_ControllerSerialNumber_String = "controllerSerialNumber";
+static const char * const k_pch_Settings_ControllerType_String = "controllerType";
+static const char * const k_pch_Settings_ControllerLegacyInputProfile_String = "controllerLegacyInputProfile";
+static const char * const k_pch_Settings_ControllerInputProfilePath_String = "controllerInputProfilePath";
+
 static const char * const k_pch_Settings_EnableController_Bool = "enableController";
 static const char * const k_pch_Settings_ControllerTriggerMode_Int32 = "controllerTriggerMode";
 static const char * const k_pch_Settings_ControllerTrackpadClickMode_Int32 = "controllerTrackpadClickMode";
@@ -121,6 +128,8 @@ public:
 	int m_Port;
 	std::string m_ControlHost;
 	int m_ControlPort;
+	std::string m_AutoConnectHost;
+	int m_AutoConnectPort;
 
 	bool m_DebugLog;
 	bool m_DebugFrameIndex;
@@ -142,8 +151,12 @@ public:
 	std::string m_controllerTrackingSystemName;
 	std::string m_controllerManufacturerName;
 	std::string m_controllerModelNumber;
-	std::string m_controllerRenderModelName;
+	std::string m_controllerRenderModelNameLeft;
+	std::string m_controllerRenderModelNameRight;
 	std::string m_controllerSerialNumber;
+	std::string m_controllerType;
+	std::string m_controllerLegacyInputProfile;
+	std::string m_controllerInputProfilePath;
 	bool m_enableController;
 	int32_t m_controllerTriggerMode;
 	int32_t m_controllerTrackpadClickMode;

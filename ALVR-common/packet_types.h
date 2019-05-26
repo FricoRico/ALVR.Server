@@ -67,6 +67,54 @@ enum ALVR_CONTROLLER_CAPABILITY_FLAG {
 	ALVR_CONTROLLER_CAPABILITY_FLAG_6DOF = 1 << 2,
 };
 
+enum ALVR_INPUT {
+	ALVR_INPUT_SYSTEM_CLICK,
+	ALVR_INPUT_APPLICATION_MENU_CLICK,
+	ALVR_INPUT_GRIP_CLICK,
+	ALVR_INPUT_GRIP_VALUE,
+	ALVR_INPUT_GRIP_TOUCH,
+	ALVR_INPUT_DPAD_LEFT_CLICK,
+	ALVR_INPUT_DPAD_UP_CLICK,
+	ALVR_INPUT_DPAD_RIGHT_CLICK,
+	ALVR_INPUT_DPAD_DOWN_CLICK,
+	ALVR_INPUT_A_CLICK,
+	ALVR_INPUT_A_TOUCH,
+	ALVR_INPUT_B_CLICK,
+	ALVR_INPUT_B_TOUCH,
+	ALVR_INPUT_X_CLICK,
+	ALVR_INPUT_X_TOUCH,
+	ALVR_INPUT_Y_CLICK,
+	ALVR_INPUT_Y_TOUCH,
+	ALVR_INPUT_TRIGGER_LEFT_VALUE,
+	ALVR_INPUT_TRIGGER_RIGHT_VALUE,
+	ALVR_INPUT_SHOULDER_LEFT_CLICK,
+	ALVR_INPUT_SHOULDER_RIGHT_CLICK,
+	ALVR_INPUT_JOYSTICK_LEFT_CLICK,
+	ALVR_INPUT_JOYSTICK_LEFT_X,
+	ALVR_INPUT_JOYSTICK_LEFT_Y,
+	ALVR_INPUT_JOYSTICK_RIGHT_CLICK,
+	ALVR_INPUT_JOYSTICK_RIGHT_X,
+	ALVR_INPUT_JOYSTICK_RIGHT_Y,
+	ALVR_INPUT_JOYSTICK_CLICK,
+	ALVR_INPUT_JOYSTICK_X,
+	ALVR_INPUT_JOYSTICK_Y,
+	ALVR_INPUT_JOYSTICK_TOUCH,
+	ALVR_INPUT_BACK_CLICK,
+	ALVR_INPUT_GUIDE_CLICK,
+	ALVR_INPUT_START_CLICK,
+	ALVR_INPUT_TRIGGER_CLICK,
+	ALVR_INPUT_TRIGGER_VALUE,
+	ALVR_INPUT_TRIGGER_TOUCH,
+	ALVR_INPUT_TRACKPAD_X,
+	ALVR_INPUT_TRACKPAD_Y,
+	ALVR_INPUT_TRACKPAD_CLICK,
+	ALVR_INPUT_TRACKPAD_TOUCH,
+
+	ALVR_INPUT_MAX = ALVR_INPUT_TRACKPAD_TOUCH,
+	ALVR_INPUT_COUNT = ALVR_INPUT_MAX + 1
+};
+#define ALVR_BUTTON_FLAG(input) (1ULL << input)
+
 #pragma pack(push, 1)
 // Represent FOV for each eye in degree.
 struct EyeFov {
@@ -133,15 +181,7 @@ struct TrackingVector3 {
 };
 struct TrackingInfo {
 	uint32_t type; // ALVR_PACKET_TYPE_TRACKING_INFO
-
-	static const int FLAG_OTHER_TRACKING_SOURCE = (1 << 0); // Other_Tracking_Source_Position has valid value (For ARCore)
-	static const int FLAG_CONTROLLER_ENABLE = (1 << 8);
-	static const int FLAG_CONTROLLER_LEFTHAND = (1 << 9); // 0: Left hand, 1: Right hand
-	static const int FLAG_CONTROLLER_OCULUSGO = (1 << 10); // 0: Gear VR, 1: Oculus Go
-	static const int FLAG_CONTROLLER_TRACKPAD_TOUCH = (1 << 11); // 0: Not touched, 1: Touched
-	static const int FLAG_CONTROLLER_BACK = (1 << 12);
-	static const int FLAG_CONTROLLER_VOLUME_UP = (1 << 13);
-	static const int FLAG_CONTROLLER_VOLUME_DOWN = (1 << 14);
+	static const uint32_t FLAG_OTHER_TRACKING_SOURCE = (1 << 0); // Other_Tracking_Source_Position has valid value (For ARCore)
 	uint32_t flags;
 
 	uint64_t clientTime;
@@ -153,26 +193,37 @@ struct TrackingInfo {
 	TrackingVector3 Other_Tracking_Source_Position;
 	TrackingQuat Other_Tracking_Source_Orientation;
 
-	static const int CONTROLLER_BUTTON_TRIGGER_CLICK = 0x00000001;
-	static const int CONTROLLER_BUTTON_TRACKPAD_CLICK = 0x00100000;
-	static const int CONTROLLER_BUTTON_BACK = 0x00200000;
-	uint32_t controllerButtons;
+	static const uint32_t MAX_CONTROLLERS = 2;
 
-	struct {
-		float x;
-		float y;
-	} controllerTrackpadPosition;
+	struct Controller {
+		static const uint32_t FLAG_CONTROLLER_ENABLE         = (1 << 0);
+		static const uint32_t FLAG_CONTROLLER_LEFTHAND       = (1 << 1); // 0: Left hand, 1: Right hand
+		static const uint32_t FLAG_CONTROLLER_GEARVR         = (1 << 2);
+		static const uint32_t FLAG_CONTROLLER_OCULUS_GO      = (1 << 3);
+		static const uint32_t FLAG_CONTROLLER_OCULUS_QUEST   = (1 << 4);
+		uint32_t flags;
 
-	uint8_t	controllerBatteryPercentRemaining;
-	uint8_t	controllerRecenterCount;
+		uint64_t buttons;
 
-	// Tracking info of controller. (float * 19 = 76 bytes)
-	TrackingQuat controller_Pose_Orientation;
-	TrackingVector3 controller_Pose_Position;
-	TrackingVector3 controller_AngularVelocity;
-	TrackingVector3 controller_LinearVelocity;
-	TrackingVector3 controller_AngularAcceleration;
-	TrackingVector3 controller_LinearAcceleration;
+		struct {
+			float x;
+			float y;
+		} trackpadPosition;
+
+		float triggerValue;
+		float gripValue;
+
+		uint8_t batteryPercentRemaining;
+		uint8_t recenterCount;
+
+		// Tracking info of controller. (float * 19 = 76 bytes)
+		TrackingQuat orientation;
+		TrackingVector3 position;
+		TrackingVector3 angularVelocity;
+		TrackingVector3 linearVelocity;
+		TrackingVector3 angularAcceleration;
+		TrackingVector3 linearAcceleration;
+	} controller[2];
 };
 // Client >----(mode 0)----> Server
 // Client <----(mode 1)----< Server
@@ -215,7 +266,10 @@ struct ChangeSettings {
 struct VideoFrame {
 	uint32_t type; // ALVR_PACKET_TYPE_VIDEO_FRAME
 	uint32_t packetCounter;
-	uint64_t frameIndex;
+	uint64_t trackingFrameIndex;
+	// FEC decoder needs some value for identify video frame number to detect new frame.
+	// trackingFrameIndex becomes sometimes same value as previous video frame (in case of low tracking rate).
+	uint64_t videoFrameIndex;
 	uint64_t sentTime;
 	uint32_t frameByteSize;
 	uint32_t fecIndex;

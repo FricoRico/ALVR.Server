@@ -57,10 +57,32 @@
             this.statDataGridView = new System.Windows.Forms.DataGridView();
             this.Name1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Value1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.disconnectButton = new MetroFramework.Controls.MetroButton();
+            this.closeServerButton = new MetroFramework.Controls.MetroButton();
             this.connectedLabel = new MetroFramework.Controls.MetroLabel();
             this.messagePanel = new MetroFramework.Controls.MetroPanel();
             this.messageLabel = new MetroFramework.Controls.MetroLabel();
+            this.videoTab = new MetroFramework.Controls.MetroTabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.metroLabel13 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel19 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
+            this.codecComboBox = new MetroFramework.Controls.MetroComboBox();
+            this.resolutionComboBox = new MetroFramework.Controls.MetroComboBox();
+            this.bufferLabel = new MetroFramework.Controls.MetroLabel();
+            this.bitrateLabel = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel18 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel9 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel17 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel8 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel16 = new MetroFramework.Controls.MetroLabel();
+            this.resolutionLabel = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel31 = new MetroFramework.Controls.MetroLabel();
+            this.metroLabel7 = new MetroFramework.Controls.MetroLabel();
+            this.bufferTrackBar = new MetroFramework.Controls.MetroTrackBar();
+            this.bitrateTrackBar = new MetroFramework.Controls.MetroTrackBar();
             this.controllerTab = new MetroFramework.Controls.MetroTabPage();
             this.enableControllerCheckBox = new MetroFramework.Controls.MetroCheckBox();
             this.metroLabel32 = new MetroFramework.Controls.MetroLabel();
@@ -73,33 +95,6 @@
             this.metroLabel20 = new MetroFramework.Controls.MetroLabel();
             this.triggerComboBox = new MetroFramework.Controls.MetroComboBox();
             this.metroLabel21 = new MetroFramework.Controls.MetroLabel();
-            this.videoTab = new MetroFramework.Controls.MetroTabPage();
-            this.heightTextBox = new MetroFramework.Controls.MetroTextBox();
-            this.widthTextBox = new MetroFramework.Controls.MetroTextBox();
-            this.metroLabel35 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel34 = new MetroFramework.Controls.MetroLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.metroLabel13 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel19 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel12 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
-            this.codecComboBox = new MetroFramework.Controls.MetroComboBox();
-            this.resolutionComboBox = new MetroFramework.Controls.MetroComboBox();
-            this.resolutionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.bufferLabel = new MetroFramework.Controls.MetroLabel();
-            this.bitrateLabel = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel18 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel9 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel17 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel8 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel16 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel10 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel31 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel7 = new MetroFramework.Controls.MetroLabel();
-            this.bufferTrackBar = new MetroFramework.Controls.MetroTrackBar();
-            this.bitrateTrackBar = new MetroFramework.Controls.MetroTrackBar();
             this.soundTab = new MetroFramework.Controls.MetroTabPage();
             this.soundDeviceComboBox = new MetroFramework.Controls.MetroComboBox();
             this.defaultSoundDeviceCheckBox = new MetroFramework.Controls.MetroCheckBox();
@@ -153,6 +148,7 @@
             this.licenseTextBox = new MetroFramework.Controls.MetroTextBox();
             this.versionLabel = new MetroFramework.Controls.MetroLabel();
             this.metroLabel6 = new MetroFramework.Controls.MetroLabel();
+            this.resolutionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.metroLabel3 = new MetroFramework.Controls.MetroLabel();
             this.startServerButton = new MetroFramework.Controls.MetroButton();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -165,13 +161,13 @@
             this.connectedPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statDataGridView)).BeginInit();
             this.messagePanel.SuspendLayout();
-            this.controllerTab.SuspendLayout();
             this.videoTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.resolutionBindingSource)).BeginInit();
+            this.controllerTab.SuspendLayout();
             this.soundTab.SuspendLayout();
             this.otherTab.SuspendLayout();
             this.debugTab.SuspendLayout();
             this.aboutTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.resolutionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -214,15 +210,15 @@
             // metroTabControl1
             // 
             this.metroTabControl1.Controls.Add(this.serverTab);
-            this.metroTabControl1.Controls.Add(this.controllerTab);
             this.metroTabControl1.Controls.Add(this.videoTab);
+            this.metroTabControl1.Controls.Add(this.controllerTab);
             this.metroTabControl1.Controls.Add(this.soundTab);
             this.metroTabControl1.Controls.Add(this.otherTab);
             this.metroTabControl1.Controls.Add(this.debugTab);
             this.metroTabControl1.Controls.Add(this.aboutTab);
             this.metroTabControl1.Location = new System.Drawing.Point(23, 63);
             this.metroTabControl1.Name = "metroTabControl1";
-            this.metroTabControl1.SelectedIndex = 2;
+            this.metroTabControl1.SelectedIndex = 0;
             this.metroTabControl1.Size = new System.Drawing.Size(664, 396);
             this.metroTabControl1.TabIndex = 8;
             // 
@@ -248,13 +244,14 @@
             this.findingPanel.HorizontalScrollbarBarColor = true;
             this.findingPanel.HorizontalScrollbarHighlightOnWheel = false;
             this.findingPanel.HorizontalScrollbarSize = 10;
-            this.findingPanel.Location = new System.Drawing.Point(3, 0);
+            this.findingPanel.Location = new System.Drawing.Point(0, 3);
             this.findingPanel.Name = "findingPanel";
             this.findingPanel.Size = new System.Drawing.Size(657, 351);
             this.findingPanel.TabIndex = 11;
             this.findingPanel.VerticalScrollbarBarColor = true;
             this.findingPanel.VerticalScrollbarHighlightOnWheel = false;
             this.findingPanel.VerticalScrollbarSize = 10;
+            this.findingPanel.Visible = false;
             // 
             // noClientLabel
             // 
@@ -373,7 +370,7 @@
             // 
             this.connectedPanel.Controls.Add(this.autoConnectCheckBox);
             this.connectedPanel.Controls.Add(this.statDataGridView);
-            this.connectedPanel.Controls.Add(this.disconnectButton);
+            this.connectedPanel.Controls.Add(this.closeServerButton);
             this.connectedPanel.Controls.Add(this.connectedLabel);
             this.connectedPanel.HorizontalScrollbarBarColor = true;
             this.connectedPanel.HorizontalScrollbarHighlightOnWheel = false;
@@ -458,14 +455,14 @@
             this.Value1.ReadOnly = true;
             this.Value1.Width = 160;
             // 
-            // disconnectButton
+            // closeServerButton
             // 
-            this.disconnectButton.Location = new System.Drawing.Point(91, 241);
-            this.disconnectButton.Name = "disconnectButton";
-            this.disconnectButton.Size = new System.Drawing.Size(113, 40);
-            this.disconnectButton.TabIndex = 11;
-            this.disconnectButton.Text = "Disconnect";
-            this.disconnectButton.Click += new System.EventHandler(this.disconnectButton_Click);
+            this.closeServerButton.Location = new System.Drawing.Point(91, 241);
+            this.closeServerButton.Name = "closeServerButton";
+            this.closeServerButton.Size = new System.Drawing.Size(113, 40);
+            this.closeServerButton.TabIndex = 11;
+            this.closeServerButton.Text = "Close server";
+            this.closeServerButton.Click += new System.EventHandler(this.disconnectButton_Click);
             // 
             // connectedLabel
             // 
@@ -506,6 +503,252 @@
             this.messageLabel.TabIndex = 9;
             this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // videoTab
+            // 
+            this.videoTab.Controls.Add(this.label3);
+            this.videoTab.Controls.Add(this.label2);
+            this.videoTab.Controls.Add(this.label1);
+            this.videoTab.Controls.Add(this.metroLabel13);
+            this.videoTab.Controls.Add(this.metroLabel19);
+            this.videoTab.Controls.Add(this.metroLabel11);
+            this.videoTab.Controls.Add(this.codecComboBox);
+            this.videoTab.Controls.Add(this.resolutionComboBox);
+            this.videoTab.Controls.Add(this.bufferLabel);
+            this.videoTab.Controls.Add(this.bitrateLabel);
+            this.videoTab.Controls.Add(this.metroLabel18);
+            this.videoTab.Controls.Add(this.metroLabel9);
+            this.videoTab.Controls.Add(this.metroLabel17);
+            this.videoTab.Controls.Add(this.metroLabel8);
+            this.videoTab.Controls.Add(this.metroLabel16);
+            this.videoTab.Controls.Add(this.resolutionLabel);
+            this.videoTab.Controls.Add(this.metroLabel10);
+            this.videoTab.Controls.Add(this.metroLabel31);
+            this.videoTab.Controls.Add(this.metroLabel7);
+            this.videoTab.Controls.Add(this.bufferTrackBar);
+            this.videoTab.Controls.Add(this.bitrateTrackBar);
+            this.videoTab.HorizontalScrollbarBarColor = true;
+            this.videoTab.Location = new System.Drawing.Point(4, 38);
+            this.videoTab.Name = "videoTab";
+            this.videoTab.Size = new System.Drawing.Size(656, 354);
+            this.videoTab.TabIndex = 5;
+            this.videoTab.Text = "Video";
+            this.videoTab.VerticalScrollbarBarColor = true;
+            // 
+            // label3
+            // 
+            this.label3.BackColor = System.Drawing.Color.DarkGray;
+            this.label3.Location = new System.Drawing.Point(29, 59);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(600, 1);
+            this.label3.TabIndex = 9;
+            // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.Color.DarkGray;
+            this.label2.Location = new System.Drawing.Point(29, 234);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(600, 1);
+            this.label2.TabIndex = 9;
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.DarkGray;
+            this.label1.Location = new System.Drawing.Point(29, 149);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(600, 1);
+            this.label1.TabIndex = 8;
+            // 
+            // metroLabel13
+            // 
+            this.metroLabel13.AutoSize = true;
+            this.metroLabel13.Location = new System.Drawing.Point(171, 313);
+            this.metroLabel13.Name = "metroLabel13";
+            this.metroLabel13.Size = new System.Drawing.Size(292, 19);
+            this.metroLabel13.TabIndex = 7;
+            this.metroLabel13.Text = "These settings will be applied after restart server.";
+            // 
+            // metroLabel19
+            // 
+            this.metroLabel19.AutoSize = true;
+            this.metroLabel19.Location = new System.Drawing.Point(56, 284);
+            this.metroLabel19.Name = "metroLabel19";
+            this.metroLabel19.Size = new System.Drawing.Size(558, 19);
+            this.metroLabel19.TabIndex = 7;
+            this.metroLabel19.Text = "Buffer size on client side. 200kB is recommended. If you experience packet loss, " +
+    "enlarge buffer.";
+            // 
+            // metroLabel11
+            // 
+            this.metroLabel11.AutoSize = true;
+            this.metroLabel11.Location = new System.Drawing.Point(56, 118);
+            this.metroLabel11.Name = "metroLabel11";
+            this.metroLabel11.Size = new System.Drawing.Size(321, 19);
+            this.metroLabel11.TabIndex = 7;
+            this.metroLabel11.Text = "Bitrate of video streaming. 30Mbps is recommended.";
+            // 
+            // codecComboBox
+            // 
+            this.codecComboBox.FormattingEnabled = true;
+            this.codecComboBox.ItemHeight = 23;
+            this.codecComboBox.Location = new System.Drawing.Point(185, 13);
+            this.codecComboBox.Name = "codecComboBox";
+            this.codecComboBox.Size = new System.Drawing.Size(192, 29);
+            this.codecComboBox.TabIndex = 6;
+            // 
+            // resolutionComboBox
+            // 
+            this.resolutionComboBox.DisplayMember = "width";
+            this.resolutionComboBox.FontSize = MetroFramework.MetroLinkSize.Small;
+            this.resolutionComboBox.FormattingEnabled = true;
+            this.resolutionComboBox.ItemHeight = 19;
+            this.resolutionComboBox.Items.AddRange(new object[] {
+            "25%",
+            "50%",
+            "75%",
+            "100%",
+            "125%",
+            "150%",
+            "175%",
+            "200%"});
+            this.resolutionComboBox.Location = new System.Drawing.Point(185, 163);
+            this.resolutionComboBox.Name = "resolutionComboBox";
+            this.resolutionComboBox.Size = new System.Drawing.Size(240, 25);
+            this.resolutionComboBox.TabIndex = 6;
+            this.resolutionComboBox.ValueMember = "width";
+            this.resolutionComboBox.SelectedIndexChanged += new System.EventHandler(this.resolutionComboBox_SelectedIndexChanged);
+            // 
+            // bufferLabel
+            // 
+            this.bufferLabel.AutoSize = true;
+            this.bufferLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.bufferLabel.Location = new System.Drawing.Point(559, 258);
+            this.bufferLabel.Name = "bufferLabel";
+            this.bufferLabel.Size = new System.Drawing.Size(57, 25);
+            this.bufferLabel.TabIndex = 5;
+            this.bufferLabel.Text = "200kB";
+            // 
+            // bitrateLabel
+            // 
+            this.bitrateLabel.AutoSize = true;
+            this.bitrateLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.bitrateLabel.Location = new System.Drawing.Point(559, 86);
+            this.bitrateLabel.Name = "bitrateLabel";
+            this.bitrateLabel.Size = new System.Drawing.Size(72, 25);
+            this.bitrateLabel.TabIndex = 5;
+            this.bitrateLabel.Text = "30Mbps";
+            // 
+            // metroLabel18
+            // 
+            this.metroLabel18.AutoSize = true;
+            this.metroLabel18.Location = new System.Drawing.Point(533, 233);
+            this.metroLabel18.Name = "metroLabel18";
+            this.metroLabel18.Size = new System.Drawing.Size(51, 19);
+            this.metroLabel18.TabIndex = 4;
+            this.metroLabel18.Text = "2000kB";
+            // 
+            // metroLabel9
+            // 
+            this.metroLabel9.AutoSize = true;
+            this.metroLabel9.Location = new System.Drawing.Point(523, 70);
+            this.metroLabel9.Name = "metroLabel9";
+            this.metroLabel9.Size = new System.Drawing.Size(63, 19);
+            this.metroLabel9.TabIndex = 4;
+            this.metroLabel9.Text = "250Mbps";
+            // 
+            // metroLabel17
+            // 
+            this.metroLabel17.AutoSize = true;
+            this.metroLabel17.Location = new System.Drawing.Point(161, 236);
+            this.metroLabel17.Name = "metroLabel17";
+            this.metroLabel17.Size = new System.Drawing.Size(42, 19);
+            this.metroLabel17.TabIndex = 4;
+            this.metroLabel17.Text = "100kB";
+            // 
+            // metroLabel8
+            // 
+            this.metroLabel8.AutoSize = true;
+            this.metroLabel8.Location = new System.Drawing.Point(161, 70);
+            this.metroLabel8.Name = "metroLabel8";
+            this.metroLabel8.Size = new System.Drawing.Size(47, 19);
+            this.metroLabel8.TabIndex = 4;
+            this.metroLabel8.Text = "1Mbps";
+            // 
+            // metroLabel16
+            // 
+            this.metroLabel16.AutoSize = true;
+            this.metroLabel16.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel16.Location = new System.Drawing.Point(25, 240);
+            this.metroLabel16.Name = "metroLabel16";
+            this.metroLabel16.Size = new System.Drawing.Size(90, 25);
+            this.metroLabel16.TabIndex = 3;
+            this.metroLabel16.Text = "Buffer size";
+            // 
+            // resolutionLabel
+            // 
+            this.resolutionLabel.AutoSize = true;
+            this.resolutionLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.resolutionLabel.Location = new System.Drawing.Point(446, 163);
+            this.resolutionLabel.Name = "resolutionLabel";
+            this.resolutionLabel.Size = new System.Drawing.Size(91, 25);
+            this.resolutionLabel.TabIndex = 3;
+            this.resolutionLabel.Text = "2048x1024";
+            // 
+            // metroLabel10
+            // 
+            this.metroLabel10.AutoSize = true;
+            this.metroLabel10.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel10.Location = new System.Drawing.Point(25, 163);
+            this.metroLabel10.Name = "metroLabel10";
+            this.metroLabel10.Size = new System.Drawing.Size(91, 25);
+            this.metroLabel10.TabIndex = 3;
+            this.metroLabel10.Text = "Resolution";
+            // 
+            // metroLabel31
+            // 
+            this.metroLabel31.AutoSize = true;
+            this.metroLabel31.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel31.Location = new System.Drawing.Point(25, 17);
+            this.metroLabel31.Name = "metroLabel31";
+            this.metroLabel31.Size = new System.Drawing.Size(60, 25);
+            this.metroLabel31.TabIndex = 3;
+            this.metroLabel31.Text = "Codec";
+            // 
+            // metroLabel7
+            // 
+            this.metroLabel7.AutoSize = true;
+            this.metroLabel7.FontSize = MetroFramework.MetroLabelSize.Tall;
+            this.metroLabel7.Location = new System.Drawing.Point(25, 86);
+            this.metroLabel7.Name = "metroLabel7";
+            this.metroLabel7.Size = new System.Drawing.Size(60, 25);
+            this.metroLabel7.TabIndex = 3;
+            this.metroLabel7.Text = "Bitrate";
+            // 
+            // bufferTrackBar
+            // 
+            this.bufferTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.bufferTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::ALVR.Properties.Settings.Default, "bufferSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.bufferTrackBar.Location = new System.Drawing.Point(185, 258);
+            this.bufferTrackBar.Name = "bufferTrackBar";
+            this.bufferTrackBar.Size = new System.Drawing.Size(368, 23);
+            this.bufferTrackBar.TabIndex = 2;
+            this.bufferTrackBar.Text = "metroTrackBar1";
+            this.bufferTrackBar.Value = global::ALVR.Properties.Settings.Default.bufferSize;
+            this.bufferTrackBar.ValueChanged += new System.EventHandler(this.bufferTrackBar_ValueChanged);
+            // 
+            // bitrateTrackBar
+            // 
+            this.bitrateTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.bitrateTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::ALVR.Properties.Settings.Default, "bitrate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.bitrateTrackBar.Location = new System.Drawing.Point(185, 92);
+            this.bitrateTrackBar.Maximum = 250;
+            this.bitrateTrackBar.Minimum = 1;
+            this.bitrateTrackBar.Name = "bitrateTrackBar";
+            this.bitrateTrackBar.Size = new System.Drawing.Size(368, 23);
+            this.bitrateTrackBar.TabIndex = 2;
+            this.bitrateTrackBar.Text = "metroTrackBar1";
+            this.bitrateTrackBar.Value = global::ALVR.Properties.Settings.Default.bitrate;
+            this.bitrateTrackBar.ValueChanged += new System.EventHandler(this.bitrateTrackBar_ValueChanged);
+            // 
             // controllerTab
             // 
             this.controllerTab.Controls.Add(this.enableControllerCheckBox);
@@ -545,7 +788,7 @@
             // 
             this.metroLabel32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.metroLabel32.AutoSize = true;
-            this.metroLabel32.Location = new System.Drawing.Point(462, -1141);
+            this.metroLabel32.Location = new System.Drawing.Point(462, -1437);
             this.metroLabel32.Name = "metroLabel32";
             this.metroLabel32.Size = new System.Drawing.Size(162, 38);
             this.metroLabel32.TabIndex = 10;
@@ -555,7 +798,7 @@
             // 
             this.metroLabel22.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.metroLabel22.AutoSize = true;
-            this.metroLabel22.Location = new System.Drawing.Point(216, -745);
+            this.metroLabel22.Location = new System.Drawing.Point(216, -1041);
             this.metroLabel22.Name = "metroLabel22";
             this.metroLabel22.Size = new System.Drawing.Size(240, 38);
             this.metroLabel22.TabIndex = 10;
@@ -641,286 +884,6 @@
             this.metroLabel21.Size = new System.Drawing.Size(64, 25);
             this.metroLabel21.TabIndex = 8;
             this.metroLabel21.Text = "Trigger";
-            // 
-            // videoTab
-            // 
-            this.videoTab.Controls.Add(this.heightTextBox);
-            this.videoTab.Controls.Add(this.widthTextBox);
-            this.videoTab.Controls.Add(this.metroLabel35);
-            this.videoTab.Controls.Add(this.metroLabel34);
-            this.videoTab.Controls.Add(this.label3);
-            this.videoTab.Controls.Add(this.label2);
-            this.videoTab.Controls.Add(this.label1);
-            this.videoTab.Controls.Add(this.metroLabel13);
-            this.videoTab.Controls.Add(this.metroLabel19);
-            this.videoTab.Controls.Add(this.metroLabel12);
-            this.videoTab.Controls.Add(this.metroLabel11);
-            this.videoTab.Controls.Add(this.codecComboBox);
-            this.videoTab.Controls.Add(this.resolutionComboBox);
-            this.videoTab.Controls.Add(this.bufferLabel);
-            this.videoTab.Controls.Add(this.bitrateLabel);
-            this.videoTab.Controls.Add(this.metroLabel18);
-            this.videoTab.Controls.Add(this.metroLabel9);
-            this.videoTab.Controls.Add(this.metroLabel17);
-            this.videoTab.Controls.Add(this.metroLabel8);
-            this.videoTab.Controls.Add(this.metroLabel16);
-            this.videoTab.Controls.Add(this.metroLabel10);
-            this.videoTab.Controls.Add(this.metroLabel31);
-            this.videoTab.Controls.Add(this.metroLabel7);
-            this.videoTab.Controls.Add(this.bufferTrackBar);
-            this.videoTab.Controls.Add(this.bitrateTrackBar);
-            this.videoTab.HorizontalScrollbarBarColor = true;
-            this.videoTab.Location = new System.Drawing.Point(4, 38);
-            this.videoTab.Name = "videoTab";
-            this.videoTab.Size = new System.Drawing.Size(656, 354);
-            this.videoTab.TabIndex = 5;
-            this.videoTab.Text = "Video";
-            this.videoTab.VerticalScrollbarBarColor = true;
-            // 
-            // heightTextBox
-            // 
-            this.heightTextBox.Location = new System.Drawing.Point(314, 168);
-            this.heightTextBox.Name = "heightTextBox";
-            this.heightTextBox.Size = new System.Drawing.Size(75, 23);
-            this.heightTextBox.TabIndex = 11;
-            this.heightTextBox.Text = "1024";
-            this.heightTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.resolutionTextBox_KeyPress);
-            // 
-            // widthTextBox
-            // 
-            this.widthTextBox.Location = new System.Drawing.Point(193, 168);
-            this.widthTextBox.Name = "widthTextBox";
-            this.widthTextBox.Size = new System.Drawing.Size(75, 23);
-            this.widthTextBox.TabIndex = 11;
-            this.widthTextBox.Text = "2048";
-            // 
-            // metroLabel35
-            // 
-            this.metroLabel35.AutoSize = true;
-            this.metroLabel35.Location = new System.Drawing.Point(283, 168);
-            this.metroLabel35.Name = "metroLabel35";
-            this.metroLabel35.Size = new System.Drawing.Size(21, 19);
-            this.metroLabel35.TabIndex = 10;
-            this.metroLabel35.Text = "H:";
-            // 
-            // metroLabel34
-            // 
-            this.metroLabel34.AutoSize = true;
-            this.metroLabel34.Location = new System.Drawing.Point(161, 168);
-            this.metroLabel34.Name = "metroLabel34";
-            this.metroLabel34.Size = new System.Drawing.Size(25, 19);
-            this.metroLabel34.TabIndex = 10;
-            this.metroLabel34.Text = "W:";
-            // 
-            // label3
-            // 
-            this.label3.BackColor = System.Drawing.Color.DarkGray;
-            this.label3.Location = new System.Drawing.Point(29, 59);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(600, 1);
-            this.label3.TabIndex = 9;
-            // 
-            // label2
-            // 
-            this.label2.BackColor = System.Drawing.Color.DarkGray;
-            this.label2.Location = new System.Drawing.Point(29, 234);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(600, 1);
-            this.label2.TabIndex = 9;
-            // 
-            // label1
-            // 
-            this.label1.BackColor = System.Drawing.Color.DarkGray;
-            this.label1.Location = new System.Drawing.Point(29, 149);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(600, 1);
-            this.label1.TabIndex = 8;
-            // 
-            // metroLabel13
-            // 
-            this.metroLabel13.AutoSize = true;
-            this.metroLabel13.Location = new System.Drawing.Point(171, 313);
-            this.metroLabel13.Name = "metroLabel13";
-            this.metroLabel13.Size = new System.Drawing.Size(292, 19);
-            this.metroLabel13.TabIndex = 7;
-            this.metroLabel13.Text = "These settings will be applied after restart server.";
-            // 
-            // metroLabel19
-            // 
-            this.metroLabel19.AutoSize = true;
-            this.metroLabel19.Location = new System.Drawing.Point(56, 284);
-            this.metroLabel19.Name = "metroLabel19";
-            this.metroLabel19.Size = new System.Drawing.Size(558, 19);
-            this.metroLabel19.TabIndex = 7;
-            this.metroLabel19.Text = "Buffer size on client side. 200kB is recommended. If you experience packet loss, " +
-    "enlarge buffer.";
-            // 
-            // metroLabel12
-            // 
-            this.metroLabel12.AutoSize = true;
-            this.metroLabel12.Location = new System.Drawing.Point(56, 195);
-            this.metroLabel12.Name = "metroLabel12";
-            this.metroLabel12.Size = new System.Drawing.Size(356, 19);
-            this.metroLabel12.TabIndex = 7;
-            this.metroLabel12.Text = "Resolution of video streaming. 2048x1024 is recommended.";
-            // 
-            // metroLabel11
-            // 
-            this.metroLabel11.AutoSize = true;
-            this.metroLabel11.Location = new System.Drawing.Point(56, 118);
-            this.metroLabel11.Name = "metroLabel11";
-            this.metroLabel11.Size = new System.Drawing.Size(321, 19);
-            this.metroLabel11.TabIndex = 7;
-            this.metroLabel11.Text = "Bitrate of video streaming. 30Mbps is recommended.";
-            // 
-            // codecComboBox
-            // 
-            this.codecComboBox.FormattingEnabled = true;
-            this.codecComboBox.ItemHeight = 23;
-            this.codecComboBox.Location = new System.Drawing.Point(185, 13);
-            this.codecComboBox.Name = "codecComboBox";
-            this.codecComboBox.Size = new System.Drawing.Size(192, 29);
-            this.codecComboBox.TabIndex = 6;
-            // 
-            // resolutionComboBox
-            // 
-            this.resolutionComboBox.DataSource = this.resolutionBindingSource;
-            this.resolutionComboBox.DisplayMember = "display";
-            this.resolutionComboBox.FontSize = MetroFramework.MetroLinkSize.Small;
-            this.resolutionComboBox.FormattingEnabled = true;
-            this.resolutionComboBox.ItemHeight = 19;
-            this.resolutionComboBox.Location = new System.Drawing.Point(413, 168);
-            this.resolutionComboBox.Name = "resolutionComboBox";
-            this.resolutionComboBox.Size = new System.Drawing.Size(240, 25);
-            this.resolutionComboBox.TabIndex = 6;
-            this.resolutionComboBox.ValueMember = "width";
-            this.resolutionComboBox.SelectedIndexChanged += new System.EventHandler(this.resolutionComboBox_SelectedIndexChanged);
-            // 
-            // resolutionBindingSource
-            // 
-            this.resolutionBindingSource.DataSource = typeof(ALVR.ServerConfig.Resolution);
-            // 
-            // bufferLabel
-            // 
-            this.bufferLabel.AutoSize = true;
-            this.bufferLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.bufferLabel.Location = new System.Drawing.Point(559, 258);
-            this.bufferLabel.Name = "bufferLabel";
-            this.bufferLabel.Size = new System.Drawing.Size(57, 25);
-            this.bufferLabel.TabIndex = 5;
-            this.bufferLabel.Text = "200kB";
-            // 
-            // bitrateLabel
-            // 
-            this.bitrateLabel.AutoSize = true;
-            this.bitrateLabel.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.bitrateLabel.Location = new System.Drawing.Point(559, 86);
-            this.bitrateLabel.Name = "bitrateLabel";
-            this.bitrateLabel.Size = new System.Drawing.Size(72, 25);
-            this.bitrateLabel.TabIndex = 5;
-            this.bitrateLabel.Text = "30Mbps";
-            // 
-            // metroLabel18
-            // 
-            this.metroLabel18.AutoSize = true;
-            this.metroLabel18.Location = new System.Drawing.Point(533, 233);
-            this.metroLabel18.Name = "metroLabel18";
-            this.metroLabel18.Size = new System.Drawing.Size(51, 19);
-            this.metroLabel18.TabIndex = 4;
-            this.metroLabel18.Text = "2000kB";
-            // 
-            // metroLabel9
-            // 
-            this.metroLabel9.AutoSize = true;
-            this.metroLabel9.Location = new System.Drawing.Point(523, 70);
-            this.metroLabel9.Name = "metroLabel9";
-            this.metroLabel9.Size = new System.Drawing.Size(63, 19);
-            this.metroLabel9.TabIndex = 4;
-            this.metroLabel9.Text = "250Mbps";
-            // 
-            // metroLabel17
-            // 
-            this.metroLabel17.AutoSize = true;
-            this.metroLabel17.Location = new System.Drawing.Point(161, 236);
-            this.metroLabel17.Name = "metroLabel17";
-            this.metroLabel17.Size = new System.Drawing.Size(42, 19);
-            this.metroLabel17.TabIndex = 4;
-            this.metroLabel17.Text = "100kB";
-            // 
-            // metroLabel8
-            // 
-            this.metroLabel8.AutoSize = true;
-            this.metroLabel8.Location = new System.Drawing.Point(161, 70);
-            this.metroLabel8.Name = "metroLabel8";
-            this.metroLabel8.Size = new System.Drawing.Size(47, 19);
-            this.metroLabel8.TabIndex = 4;
-            this.metroLabel8.Text = "1Mbps";
-            // 
-            // metroLabel16
-            // 
-            this.metroLabel16.AutoSize = true;
-            this.metroLabel16.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.metroLabel16.Location = new System.Drawing.Point(25, 240);
-            this.metroLabel16.Name = "metroLabel16";
-            this.metroLabel16.Size = new System.Drawing.Size(90, 25);
-            this.metroLabel16.TabIndex = 3;
-            this.metroLabel16.Text = "Buffer size";
-            // 
-            // metroLabel10
-            // 
-            this.metroLabel10.AutoSize = true;
-            this.metroLabel10.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.metroLabel10.Location = new System.Drawing.Point(25, 163);
-            this.metroLabel10.Name = "metroLabel10";
-            this.metroLabel10.Size = new System.Drawing.Size(91, 25);
-            this.metroLabel10.TabIndex = 3;
-            this.metroLabel10.Text = "Resolution";
-            // 
-            // metroLabel31
-            // 
-            this.metroLabel31.AutoSize = true;
-            this.metroLabel31.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.metroLabel31.Location = new System.Drawing.Point(25, 17);
-            this.metroLabel31.Name = "metroLabel31";
-            this.metroLabel31.Size = new System.Drawing.Size(60, 25);
-            this.metroLabel31.TabIndex = 3;
-            this.metroLabel31.Text = "Codec";
-            // 
-            // metroLabel7
-            // 
-            this.metroLabel7.AutoSize = true;
-            this.metroLabel7.FontSize = MetroFramework.MetroLabelSize.Tall;
-            this.metroLabel7.Location = new System.Drawing.Point(25, 86);
-            this.metroLabel7.Name = "metroLabel7";
-            this.metroLabel7.Size = new System.Drawing.Size(60, 25);
-            this.metroLabel7.TabIndex = 3;
-            this.metroLabel7.Text = "Bitrate";
-            // 
-            // bufferTrackBar
-            // 
-            this.bufferTrackBar.BackColor = System.Drawing.Color.Transparent;
-            this.bufferTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::ALVR.Properties.Settings.Default, "bufferSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.bufferTrackBar.Location = new System.Drawing.Point(185, 258);
-            this.bufferTrackBar.Name = "bufferTrackBar";
-            this.bufferTrackBar.Size = new System.Drawing.Size(368, 23);
-            this.bufferTrackBar.TabIndex = 2;
-            this.bufferTrackBar.Text = "metroTrackBar1";
-            this.bufferTrackBar.Value = global::ALVR.Properties.Settings.Default.bufferSize;
-            this.bufferTrackBar.ValueChanged += new System.EventHandler(this.bufferTrackBar_ValueChanged);
-            // 
-            // bitrateTrackBar
-            // 
-            this.bitrateTrackBar.BackColor = System.Drawing.Color.Transparent;
-            this.bitrateTrackBar.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::ALVR.Properties.Settings.Default, "bitrate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.bitrateTrackBar.Location = new System.Drawing.Point(185, 92);
-            this.bitrateTrackBar.Maximum = 250;
-            this.bitrateTrackBar.Minimum = 1;
-            this.bitrateTrackBar.Name = "bitrateTrackBar";
-            this.bitrateTrackBar.Size = new System.Drawing.Size(368, 23);
-            this.bitrateTrackBar.TabIndex = 2;
-            this.bitrateTrackBar.Text = "metroTrackBar1";
-            this.bitrateTrackBar.Value = global::ALVR.Properties.Settings.Default.bitrate;
-            this.bitrateTrackBar.ValueChanged += new System.EventHandler(this.bitrateTrackBar_ValueChanged);
             // 
             // soundTab
             // 
@@ -1566,11 +1529,10 @@
             this.connectedPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.statDataGridView)).EndInit();
             this.messagePanel.ResumeLayout(false);
-            this.controllerTab.ResumeLayout(false);
-            this.controllerTab.PerformLayout();
             this.videoTab.ResumeLayout(false);
             this.videoTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.resolutionBindingSource)).EndInit();
+            this.controllerTab.ResumeLayout(false);
+            this.controllerTab.PerformLayout();
             this.soundTab.ResumeLayout(false);
             this.soundTab.PerformLayout();
             this.otherTab.ResumeLayout(false);
@@ -1579,6 +1541,7 @@
             this.debugTab.PerformLayout();
             this.aboutTab.ResumeLayout(false);
             this.aboutTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.resolutionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -1626,7 +1589,6 @@
         private MetroFramework.Controls.MetroComboBox resolutionComboBox;
         private MetroFramework.Controls.MetroLabel metroLabel10;
         private MetroFramework.Controls.MetroLabel noClientLabel;
-        private MetroFramework.Controls.MetroLabel metroLabel12;
         private MetroFramework.Controls.MetroLabel metroLabel11;
         private MetroFramework.Controls.MetroLabel metroLabel13;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -1658,7 +1620,7 @@
         private System.Windows.Forms.DataGridViewButtonColumn Button;
         private MetroFramework.Controls.MetroPanel connectedPanel;
         private System.Windows.Forms.DataGridView statDataGridView;
-        private MetroFramework.Controls.MetroButton disconnectButton;
+        private MetroFramework.Controls.MetroButton closeServerButton;
         private MetroFramework.Controls.MetroLabel connectedLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn Name1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value1;
@@ -1703,10 +1665,7 @@
         private MetroFramework.Controls.MetroButton captureLayerDDSButton;
         private MetroFramework.Controls.MetroCheckBox defaultSoundDeviceCheckBox;
         private MetroFramework.Controls.MetroCheckBox force60HzCheckBox;
-        private MetroFramework.Controls.MetroTextBox heightTextBox;
-        private MetroFramework.Controls.MetroTextBox widthTextBox;
-        private MetroFramework.Controls.MetroLabel metroLabel35;
-        private MetroFramework.Controls.MetroLabel metroLabel34;
+        private MetroFramework.Controls.MetroLabel resolutionLabel;
     }
 }
 
