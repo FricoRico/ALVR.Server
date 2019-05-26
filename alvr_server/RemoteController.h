@@ -83,14 +83,20 @@ public:
 			vr::VRDriverInput()->CreateScalarComponent(m_ulPropertyContainer, "/input/grip/value", &m_handles[ALVR_INPUT_GRIP_VALUE], vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedOneSided);
 			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/grip/touch", &m_handles[ALVR_INPUT_GRIP_TOUCH]);
 
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/a/click", &m_handles[ALVR_INPUT_A_CLICK]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/a/touch", &m_handles[ALVR_INPUT_A_TOUCH]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/b/click", &m_handles[ALVR_INPUT_B_CLICK]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/b/touch", &m_handles[ALVR_INPUT_B_TOUCH]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/x/click", &m_handles[ALVR_INPUT_X_CLICK]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/x/touch", &m_handles[ALVR_INPUT_X_TOUCH]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/y/click", &m_handles[ALVR_INPUT_Y_CLICK]);
-			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/y/touch", &m_handles[ALVR_INPUT_Y_TOUCH]);
+			if (!m_hand) {
+				// A,B for right hand.
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/a/click", &m_handles[ALVR_INPUT_A_CLICK]);
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/a/touch", &m_handles[ALVR_INPUT_A_TOUCH]);
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/b/click", &m_handles[ALVR_INPUT_B_CLICK]);
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/b/touch", &m_handles[ALVR_INPUT_B_TOUCH]);
+			}
+			else {
+				// X,Y for left hand.
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/x/click", &m_handles[ALVR_INPUT_X_CLICK]);
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/x/touch", &m_handles[ALVR_INPUT_X_TOUCH]);
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/y/click", &m_handles[ALVR_INPUT_Y_CLICK]);
+				vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/y/touch", &m_handles[ALVR_INPUT_Y_TOUCH]);
+			}
 
 			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/joystick/click", &m_handles[ALVR_INPUT_JOYSTICK_CLICK]);
 			vr::VRDriverInput()->CreateScalarComponent(m_ulPropertyContainer, "/input/joystick/x", &m_handles[ALVR_INPUT_JOYSTICK_X], vr::VRScalarType_Absolute, vr::VRScalarUnits_NormalizedTwoSided);
@@ -159,6 +165,8 @@ public:
 			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/trackpad/click", &m_handles[ALVR_INPUT_TRACKPAD_CLICK]);
 			vr::VRDriverInput()->CreateBooleanComponent(m_ulPropertyContainer, "/input/trackpad/touch", &m_handles[ALVR_INPUT_TRACKPAD_TOUCH]);
 		}
+		vr::VRDriverInput()->CreateHapticComponent(m_ulPropertyContainer, "/output/haptic", &m_compHaptic);
+
 		return vr::VRInitError_None;
 	}
 
@@ -193,6 +201,10 @@ public:
 	virtual vr::DriverPose_t GetPose()
 	{
 		return m_pose;
+	}
+
+	bool IsMyHapticComponent(uint64_t handle){
+		return m_compHaptic == handle;
 	}
 
 	bool ReportControllerState(int controllerIndex, const TrackingInfo &info
@@ -243,17 +255,19 @@ public:
 				uint64_t b = ALVR_BUTTON_FLAG(i);
 				if ((m_previousButtons & b) != (c.buttons & b)) {
 					int mapped = i;
-					if (i == ALVR_INPUT_TRIGGER_CLICK) {
-						mapped = Settings::Instance().m_controllerTriggerMode;
-					}
-					else if (i == ALVR_INPUT_TRACKPAD_CLICK) {
-						mapped = Settings::Instance().m_controllerTrackpadClickMode;
-					}
-					else if (i == ALVR_INPUT_TRACKPAD_TOUCH) {
-						mapped = Settings::Instance().m_controllerTrackpadTouchMode;
-					}
-					else if (i == ALVR_INPUT_BACK_CLICK) {
-						mapped = Settings::Instance().m_controllerBackMode;
+					if (!mIsTouch) {
+						if (i == ALVR_INPUT_TRIGGER_CLICK) {
+							mapped = Settings::Instance().m_controllerTriggerMode;
+						}
+						else if (i == ALVR_INPUT_TRACKPAD_CLICK) {
+							mapped = Settings::Instance().m_controllerTrackpadClickMode;
+						}
+						else if (i == ALVR_INPUT_TRACKPAD_TOUCH) {
+							mapped = Settings::Instance().m_controllerTrackpadTouchMode;
+						}
+						else if (i == ALVR_INPUT_BACK_CLICK) {
+							mapped = Settings::Instance().m_controllerBackMode;
+						}
 					}
 					bool value = (c.buttons & b) != 0;
 					if (mapped != -1 && mapped <= ALVR_INPUT_MAX && m_handles[mapped] != vr::k_ulInvalidInputComponentHandle) {
@@ -308,6 +322,7 @@ private:
 	bool mIsTouch;
 
 	vr::VRInputComponentHandle_t m_handles[ALVR_INPUT_COUNT];
+	vr::VRInputComponentHandle_t m_compHaptic;
 
 	vr::DriverPose_t m_pose;
 };
